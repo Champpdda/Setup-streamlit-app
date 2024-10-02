@@ -70,7 +70,13 @@ def main():
 
     # เมนูด้านข้าง
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Select a Page:", ["File Size Calculator", "Bill Calculator", "Lean Body Mass and Calorie Needs", "Heart Rate Zone Calculator"])
+    page = st.sidebar.radio("Select a Page:", [
+        "File Size Calculator",
+        "Bill Calculator",
+        "Lean Body Mass Calculator",
+        "Calorie Needs Calculator",
+        "Heart Rate Zone Calculator"
+    ])
 
     if page == "File Size Calculator":
         st.header("File Size Calculator")
@@ -108,6 +114,9 @@ def main():
 
     elif page == "Bill Calculator":
         st.header("Bill Calculator")
+        
+        # คำนวณบิล
+        st.subheader("Calculate Your Bill")
         bill_amount = st.number_input("Bill Amount (€):", min_value=0.0)
         tax_rate = st.number_input("Tax Rate (%):", min_value=0.0)
         tip_percentage = st.number_input("Tip Percentage (%):", min_value=0.0)
@@ -117,13 +126,14 @@ def main():
             tax, tip, total_bill, price_per_person = calculate_bill(bill_amount, tax_rate, tip_percentage, num_people)
             st.success(f"Tax: €{tax:.2f}\nTip: €{tip:.2f}\nTotal Bill: €{total_bill:.2f}\nPrice per Person: €{price_per_person:.2f}")
 
-    elif page == "Lean Body Mass and Calorie Needs":
-        st.header("Lean Body Mass and Calorie Needs Calculator")
+    elif page == "Lean Body Mass Calculator":
+        st.header("Lean Body Mass Calculator")
+        
+        # คำนวณมวลกายที่ไม่มีไขมัน
         weight_kg = st.number_input("Weight (kg):", min_value=1.0)
         height_cm = st.number_input("Height (cm):", min_value=1.0)
         age = st.number_input("Age (years):", min_value=1)
         gender = st.selectbox("Gender:", ["Male", "Female"])
-        activity_level = st.selectbox("Activity Level:", ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Super Active"])
 
         if st.button("Calculate Lean Body Mass"):
             lbm = calculate_lean_body_mass(weight_kg, height_cm, gender)
@@ -131,18 +141,31 @@ def main():
             fat_percentage = (fat_mass / weight_kg) * 100
             st.success(f"Lean Body Mass: {lbm:.2f} kg\nFat Mass: {fat_mass:.2f} kg\nBody Fat Percentage: {fat_percentage:.2f}%")
 
+    elif page == "Calorie Needs Calculator":
+        st.header("Calorie Needs Calculator")
+        
+        # คำนวณความต้องการแคลอรี
+        weight_kg = st.number_input("Weight (kg):", min_value=1.0)
+        height_cm = st.number_input("Height (cm):", min_value=1.0)
+        age = st.number_input("Age (years):", min_value=1)
+        gender = st.selectbox("Gender:", ["Male", "Female"])
+        activity_level = st.selectbox("Activity Level:", ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Super Active"])
+
         if st.button("Calculate Calorie Needs"):
             daily_calories = calculate_calorie_needs(weight_kg, height_cm, age, gender, activity_level)
             st.success(f"Daily Calorie Needs: {daily_calories:.2f} kcal")
 
     elif page == "Heart Rate Zone Calculator":
         st.header("Heart Rate Zone Calculator")
+        
+        # คำนวณอัตราการเต้นของหัวใจ
         age_for_heart_rate = st.number_input("Age (years) for Heart Rate Calculation:", min_value=1)
-
+        
         if st.button("Calculate Heart Rate Zones"):
             max_heart_rate, zones = calculate_heart_rate_zones(age_for_heart_rate)
-            zone_details = "\n".join([f"{zone}: {rate[0]:.2f} - {rate[1]:.2f} bpm" for zone, rate in zones.items()])
-            st.success(f"Max Heart Rate: {max_heart_rate:.2f} bpm\n\n{zone_details}")
+            st.success(f"Max Heart Rate: {max_heart_rate:.2f} bpm")
+            for zone, (low, high) in zones.items():
+                st.write(f"{zone}: {low:.2f} - {high:.2f} bpm")
 
 if __name__ == "__main__":
     main()
