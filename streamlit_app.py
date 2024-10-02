@@ -73,6 +73,7 @@ def main():
     option = st.selectbox("Select File Type:", ("Image", "Video", "Film"))
 
     if option == "Image":
+        st.subheader("Image File Size Calculation")
         width = st.number_input("Width (pixels):", min_value=1)
         height = st.number_input("Height (pixels):", min_value=1)
         bits_per_pixel = st.number_input("Bits per pixel (e.g., 24 for RGB):", min_value=1)
@@ -82,6 +83,7 @@ def main():
             st.success(f"Image file size: {size_mb:.2f} MB")
 
     elif option == "Video":
+        st.subheader("Video File Size Calculation")
         bitrate_mbps = st.number_input("Bitrate (Mbps):", min_value=1.0)
         duration_seconds = st.number_input("Duration (seconds):", min_value=1)
 
@@ -90,6 +92,7 @@ def main():
             st.success(f"Video file size: {size_mb:.2f} MB")
 
     elif option == "Film":
+        st.subheader("Film File Size Calculation")
         width = st.number_input("Width (pixels):", min_value=1)
         height = st.number_input("Height (pixels):", min_value=1)
         frames = st.number_input("Number of frames:", min_value=1)
@@ -130,8 +133,10 @@ def main():
 
     # ส่วนคำนวณอัตราการเต้นของหัวใจ
     st.header("Heart Rate Zone Calculator")
+    age_for_heart_rate = st.number_input("Age (years) for Heart Rate Calculation:", min_value=1)
+
     if st.button("Calculate Heart Rate Zones"):
-        max_heart_rate, zones = calculate_heart_rate_zones(age)
+        max_heart_rate, zones = calculate_heart_rate_zones(age_for_heart_rate)
         zone_details = "\n".join([f"{zone}: {rate[0]:.2f} - {rate[1]:.2f} bpm" for zone, rate in zones.items()])
         st.success(f"Max Heart Rate: {max_heart_rate:.2f} bpm\n\n{zone_details}")
 
