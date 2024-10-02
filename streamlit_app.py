@@ -44,6 +44,14 @@ def calculate_calorie_needs(weight_kg, height_cm, age, gender, activity_level):
     calorie_needs = bmr * activity_multipliers.get(activity_level, 1.2)
     return calorie_needs
 
+# ฟังก์ชันคำนวณบิล
+def calculate_bill(bill_amount, tax_rate, tip_percentage, num_people):
+    tax = bill_amount * (tax_rate / 100)
+    tip = bill_amount * (tip_percentage / 100)
+    total_bill = bill_amount + tax + tip
+    price_per_person = total_bill / num_people if num_people > 0 else 0
+    return tax, tip, total_bill, price_per_person
+
 # ฟังก์ชันหลักสำหรับ Streamlit app
 def main():
     st.title("Health and File Size Calculator")
@@ -78,6 +86,17 @@ def main():
         if st.button("Calculate Film Size"):
             size_gb = calculate_film_file_size(width, height, frames, bits_per_pixel)
             st.success(f"Film file size: {size_gb:.2f} GB")
+
+    # ส่วนคำนวณบิล
+    st.header("Bill Calculator")
+    bill_amount = st.number_input("Bill Amount (€):", min_value=0.0)
+    tax_rate = st.number_input("Tax Rate (%):", min_value=0.0)
+    tip_percentage = st.number_input("Tip Percentage (%):", min_value=0.0)
+    num_people = st.number_input("Number of People:", min_value=1)
+
+    if st.button("Calculate Bill"):
+        tax, tip, total_bill, price_per_person = calculate_bill(bill_amount, tax_rate, tip_percentage, num_people)
+        st.success(f"Tax: €{tax:.2f}\nTip: €{tip:.2f}\nTotal Bill: €{total_bill:.2f}\nPrice per Person: €{price_per_person:.2f}")
 
     # ส่วนคำนวณมวลกายที่ไม่มีไขมัน
     st.header("Lean Body Mass and Calorie Needs Calculator")
